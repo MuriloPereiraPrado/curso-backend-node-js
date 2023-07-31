@@ -15,7 +15,17 @@ function createAccessToken(){
 };
 
 function createRefreshToken(){
+    const expToken = new Date();
+    expToken.setMonth(expToken.getMonth() + 1);
 
+    const payLoad = {
+        token_type : 'accessRefresh',
+        user_id : User._id,
+        iat : Date.now(),
+        exp : expToken.getTime(),
+    }
+
+    return jsonwebtoken.sign(payLoad, JWT_SECRET_KEY);
 };
 
 function decoded(){
