@@ -1,26 +1,26 @@
 import jsonwebtoken from 'jsonwebtoken';
 import { JWT_SECRET_KEY } from '../constants.js';
 
-function createAccessToken(){
+function createAccessToken(user){
     const expToken = new Date();
     expToken.setHours(expToken.getHours() + 24);
 
     const payLoad = {
         token_type : 'accessToken',
-        user_id : User._id,
+        user_id : user._id,
         iat : Date.now(),
         exp : expToken.getTime(),
     }
     return jsonwebtoken.sign(payLoad, JWT_SECRET_KEY);
 };
 
-function createRefreshToken(){
+function createRefreshToken(user){
     const expToken = new Date();
     expToken.setMonth(expToken.getMonth() + 1);
 
     const payLoad = {
         token_type : 'accessRefresh',
-        user_id : User._id,
+        user_id : user._id,
         iat : Date.now(),
         exp : expToken.getTime(),
     }
@@ -28,12 +28,17 @@ function createRefreshToken(){
     return jsonwebtoken.sign(payLoad, JWT_SECRET_KEY);
 };
 
-function decoded(){
-
+function decoded(token){
+    return jsonwebtoken.decode(token, JWT_SECRET_KEY, true);
 };
 
-function hasExpiredToken(){
-
+function hasExpiredToken(token){
+    const { exp } = decoded(token);
+    const  currentDate = new Date().getTime();
+    if ( exp <= currentDate){
+        return true;
+    }
+    return false;
 };
 
 export const jwt = {
