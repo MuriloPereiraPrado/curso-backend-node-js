@@ -1,7 +1,9 @@
 import { User } from '../models/index.js';
 
-//TODO implementar o controller de usuário
+async function getMe(req, res){
+    res.status(200).json({msg:"Get Me !"});
+}
 
 export const UserController = {
-
+    getMe
 }
